@@ -31,8 +31,14 @@ println(@sprintf("%i * %i = %i", answerA[1], answerA[2], (answerA[1]*answerA[2])
 
 function findaddto3(sorted, target)
     len = size(sorted, 1)
-    for i = 1:len
-        without = i > 1 ? (i < len ? vcat(sorted[1:i-1], sorted[i+1:len]) : sorted[1:len-1]) : sorted[i:len]
+
+    # third last item is the last one we can check, because for last and second last 
+    # there will not be 2 items remaining to be in a group with
+    for i = 1:(len-2)
+
+        # do not need to include items before current because if they were in the correct set 
+        # they would have been picked up during an earlier iteration
+        without = sorted[i+1:len]
         other2 = findaddto(without, target - sorted[i])
      
         if other2 != nothing
