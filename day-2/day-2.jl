@@ -1,6 +1,4 @@
-using DelimitedFiles
-using Base
-using Printf
+include("../Helpers.jl")
 
 struct PasswordRule
     char::Char
@@ -8,18 +6,23 @@ struct PasswordRule
     high::Number
     matchfunc::Function
 
+    PasswordRule(char::Char, low::Number, high::Number, matchfunc::Function) = new(char, low, high, matchfunc)
     function PasswordRule(str, matchfunc::Function)
         parts = split(str, ' ')
         validrange = split(parts[1], '-')
         new(parts[2][1], parse(Int, validrange[1]), parse(Int, validrange[2]), matchfunc)
     end
-
-    PasswordRule(char::Char, low::Number, high::Number, matchfunc::Function) = new(char, low, high, matchfunc)
 end
 
 struct Password
     rule::PasswordRule
     password::String
+
+    Password(rule, password) = new(rule, password)
+    function Password(str, matchfunc::Function)
+        input = map(strip, split(str, ':'))
+        new(PasswordRule(input[1], matchfunc), input[2])
+    end
 end
 
 countchar(s::String, c::Char) = size(split(s, c), 1) - 1
@@ -33,29 +36,30 @@ valid(pwd::Password) = pwd.rule.matchfunc(pwd.password, pwd.rule)
 
 findvalid(arr) = filter(valid,arr)
 
-getpasswords(arr, matchfunc) = map(i -> Password(PasswordRule(arr[i, 1], matchfunc), arr[i,2]), 1:size(arr, 1))
+getpasswords(file, matchfunc) = readcollection(file, s -> Password(s, matchfunc))
 
-function parseinput(file)
-    input = readdlm(file,  ':', String)
-    input_formatted = map(strip, input)
-end
-
-getvalid(file, matchfunc) = getpasswords(parseinput(file), matchfunc) |> findvalid
-
-function testA()
-    res = getvalid("test-day-2.txt", matches_a)
-    return size(res, 1) == 2 && res[1].password == "abcde" && res[2].password == "ccccccccc"
-end
-
-function testB()
-    res = getvalid("test-day-2.txt", matches_b)
-    return size(res, 1) == 1 && res[1].password == "abcde"
-end
+getvalid(file, matchfunc) = getpasswords(file, matchfunc) |> findvalid
 
 
+convert_res_for_test(rescoll) = map(res -> res.password, rescoll)
+
+test(matchfunc, expected) = run(getvalid, [TestPermutation(("test-day-2.txt", matchfunc), expected)], convert_res_for_test)
+
+testA() = test(matches_a, ["abcde", "ccccccccc"])
+
+testB() = test(matches_b, ["abcde"])
+
+
+println("Test A")
+println(tostring(testA()))
+println("")
 println("A")
 println(size(getvalid("input-2.txt", matches_a), 1))
 
+println("")
+println("Test B")
+println(tostring(testB()))
+println("")
 println("B")
 println(size(getvalid("input-2.txt", matches_b), 1))
 

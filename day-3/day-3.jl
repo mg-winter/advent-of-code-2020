@@ -1,6 +1,4 @@
-using DelimitedFiles
-using Base
-using Printf
+include("../Helpers.jl")
 
 function counttrees(roadmap, slope)
     height = size(roadmap, 1)
@@ -13,25 +11,21 @@ function counttrees(roadmap, slope)
     return size(trees, 1)
 end
 
-getmap(file) = permutedims(hcat(map(collect, readlines(file))...))
+getmap(file) = readgrid(file, nothing)
 
 function test_a()
-    res = counttrees(getmap("test-day-3.txt"), (3, 1))
-    println(res)
-    return res == 7
+    return run(Test(counttrees, TestPermutation((getmap("test-day-3.txt"), (3, 1)), 7)))
 end
 
 
 function test_b()
     roadmap = getmap("test-day-3.txt")
     tests = [((1, 1), 2), ((3, 1), 7), ((5, 1), 3), ((7, 1), 4), ((1, 2), 2)]
-    results = map(t -> (t, (res =counttrees(roadmap, t[1]); (res, res === t[2]))), tests)
+    testperms = map(t -> TestPermutation((roadmap, t[1]), t[2]), tests)
 
-    resultsonly = map(res -> res[2][1], results)
-
-    mult = prod(resultsonly)
-
-    return (results, mult, mult === 336)
+    results =  run(counttrees, testperms)
+    results_args = [[results]]
+    return [results, run(Test(prod ∘ curry_map(res -> res.actual), (TestPermutation(results_args, 336))))]
 end
 
 function run_b()
@@ -42,7 +36,7 @@ function run_b()
 end
 
 println("Test part A")
-println(test_a())
+println(tostring(test_a()))
 
 println("")
 println("Result for part A")
@@ -50,7 +44,7 @@ println(counttrees(getmap("input-3.txt"), (3, 1)))
 
 println("")
 println("Test part B")
-println(test_b())
+println(map(tostring, test_b()) |> joinparas)
 
 println("")
 println("Result for part B")
