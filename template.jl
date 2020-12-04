@@ -25,7 +25,7 @@ println(run_a())
 
 println("")
 println("Test part B")
-println(tostring(test_a()))
+println(tostring(test_b()))
 
 println("")
 println("Result for part B")
