@@ -2,11 +2,11 @@ using DelimitedFiles
 using Base
 using Printf
 
-curry(func::Function, first) = args -> func(first, args...)
+curry(func::Function, first, expectone = false) = args -> expectone ? func(first, args) : func(first, args...)
 
-curry_map(mapfunc::Function) = curry(map, mapfunc)
+curry_map(mapfunc::Function, expectone = false) = curry(map, mapfunc, expectone)
 
-curry_filter(filterfunc::Function) = curry(filter, filterfunc)
+curry_filter(filterfunc::Function, expectone = false) = curry(filter, filterfunc, expectone)
 
 
 readchargrid(file) = permutedims(hcat(map(collect, readlines(file))...))
