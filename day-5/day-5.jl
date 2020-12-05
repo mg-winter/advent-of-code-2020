@@ -6,8 +6,10 @@ seatid(row, col) = row << 3  + col
 function position(subsectionposes)
 
     len = size(subsectionposes, 1)
+    powers = reverse(map(n -> 1 << n, 0:len-1))
 
-    return sum(map(i -> subsectionposes[i] == 0 ? 0 : 1 << (len - i),1:len))
+    return sum(subsectionposes .* powers)
+
 end
 
 function convertsection(letter)
