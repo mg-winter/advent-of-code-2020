@@ -13,7 +13,7 @@ readchargrid(file) = permutedims(hcat(map(collect, readlines(file))...))
 
 readgrid(file, delim = nothing, type = nothing) = delim == nothing ? readchargrid(file) : (params = type == nothing ? (file, delim) : (file, delim, type); readdlm(params...))
     
-readcollection(file, converter::Function = nothing) = (res = readlines(file); converter == nothing ? res : map(converter, res))
+readcollection(file, converter = nothing) = (res = readlines(file); converter == nothing ? res : map(converter, res))
 
 
 joinparas(arr) = join(arr, "\n\n")
