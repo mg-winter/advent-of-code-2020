@@ -3,7 +3,7 @@ include("../Helpers.jl")
 
 seatid(row, col) = row * 8  + col
 
-function position(startsection, subsectionposes)
+function position(subsectionposes)
 
     len = size(subsectionposes, 1)
 
@@ -26,15 +26,14 @@ function readbsp(str)
     return (map(convertsection, arr[1:7]), map(convertsection, arr[8:10]))
 end
 
-function getsectiondata(rowsections, colsections, str)
+function getsectiondata(str)
     pos = readbsp(str)
-    row = position(rowsections, pos[1])
-    col = position(colsections, pos[2])
+    row = position(pos[1])
+    col = position(pos[2])
 
     return (row, col, seatid(row, col))
 end
 
-getsectiondata_a(str) = getsectiondata((0, 127), (0,8), str)
 function test_a()
     testperms = [
         TestPermutation((["FBFBBFFRLR"]), (44, 5, 357)),
@@ -42,7 +41,7 @@ function test_a()
         TestPermutation((["FFFBBBFRRR"]), (14, 7, 119)),
         TestPermutation((["BBFFBBFRLL"]), (102, 4, 820))
     ]
-    return run(getsectiondata_a, testperms)
+    return run(getsectiondata, testperms)
 end
 
 function test_b()
@@ -51,13 +50,13 @@ end
 
 function run_a()
     input = readcollection("input-5.txt")
-    results = map(getsectiondata_a, input)
+    results = map(getsectiondata, input)
     return  max(map(res -> res[3], results)...)
 end
 
 function run_b()
     input = readcollection("input-5.txt")
-    results = map(getsectiondata_a, input)
+    results = map(getsectiondata, input)
     ids = map(res -> res[3], results)
     sorted = sort(ids)
 
