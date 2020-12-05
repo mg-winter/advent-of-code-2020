@@ -1,7 +1,7 @@
 include("../Helpers.jl")
 
 
-seatid(row, col) = row * 8  + col
+seatid(row, col) = row << 3  + col
 
 function position(subsectionposes)
 
