@@ -3,14 +3,7 @@ include("../Helpers.jl")
 
 seatid(row, col) = row << 3  + col
 
-function position(subsectionposes)
-
-    len = size(subsectionposes, 1)
-    powers = reverse(map(n -> 1 << n, 0:len-1))
-
-    return sum(subsectionposes .* powers)
-
-end
+position(subsectionposes) = sum(subsectionposes .<< reverse(0:size(subsectionposes, 1)-1))
 
 function convertsection(letter)
     letters = Dict([
