@@ -6,7 +6,6 @@ seatid(row, col) = row * 8  + col
 function position(startsection, subsectionposes)
 
     len = size(subsectionposes, 1)
-    twos = map(i -> subsectionposes[i] == 0 ? 0 : 1 << (len - i),1:len)
 
     return sum(map(i -> subsectionposes[i] == 0 ? 0 : 1 << (len - i),1:len))
 end
