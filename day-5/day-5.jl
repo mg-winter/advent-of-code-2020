@@ -3,29 +3,20 @@ include("../Helpers.jl")
 
 seatid(row, col) = row * 8  + col
 
-function subsection(section, is_lower)
-    diff = section[2] - section[1]
-    middle = section[1] + ((section[2] - section[1] - 1) ÷ 2)
-    return is_lower ? (section[1], middle) : (middle + 1, section[2])
-end
-
 function position(startsection, subsectionposes)
 
-    section = startsection
+    len = size(subsectionposes, 1)
+    twos = map(i -> subsectionposes[i] == 0 ? 0 : 1 << (len - i),1:len)
 
-    for is_lower = subsectionposes
-        section = subsection(section, is_lower)
-    end
-
-    return section[1]
+    return sum(map(i -> subsectionposes[i] == 0 ? 0 : 1 << (len - i),1:len))
 end
 
 function convertsection(letter)
     letters = Dict([
-        'F' => true,
-        'B' => false,
-        'L' => true,
-        'R' => false
+        'F' => 0,
+        'B' => 1,
+        'L' => 0,
+        'R' => 1
     ])
 
     return letters[letter]
