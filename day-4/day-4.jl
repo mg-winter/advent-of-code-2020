@@ -48,32 +48,11 @@ function validate_b(passport::Dict)
         return false
     end
 end
-function readpassports(file)
-    
-    lines = readlines(file)
 
-    passports = []
-    passport = Dict()
+getentrypairs(line) = map(entry -> (pair = split(entry, ':'); return pair[1] => pair[2]), split(line, ' '))
 
-    for line = lines
-        if line == ""
-            push!(passports, passport)
-            passport = Dict()
-        else
-            entries = split(line, ' ')
-            for entry = entries
-                pair = split(entry, ':')
-                push!(passport, pair[1] => pair[2])
-            end
-        end
-    end
-
-    push!(passports, passport)
-
-    return passports
-end
-
-
+readpassports(file) = readgroups(file, getentrypairs, Dict, pushall!)
+  
 countvalid(passports::AbstractVector, validator::Function) = size(filter(validator, passports),1)
 countvalid(file::String, validator::Function) = countvalid(readpassports(file), validator)
 
