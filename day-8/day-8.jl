@@ -43,7 +43,7 @@ const INSTRUCTIONS_REF = Dict(["nop" => nop, "jmp" => jmp, "acc" => acc])
 isrepeat(console) = in(console.state.instrptr, console.pastinstructions)
 isvalidinstr(console) = console.state.instrptr > 0 && console.state.instrptr <= length(console.instructions)
 
-function execute(console)
+function execute!(console)
     push!(console.pastinstructions, console.state.instrptr)
 
     curinstr = console.instructions[console.state.instrptr] 
@@ -52,11 +52,10 @@ function execute(console)
     console.state.instrptr = res[2]
 end
 
-function run(console::Console)
-    len = length(console.instructions)
+function run!(console::Console)
 
     while isvalidinstr(console) && !isrepeat(console)
-        execute(console)
+        execute!(console)
     end
 
     return (console.state.accumulator, isrepeat(console))
@@ -65,7 +64,7 @@ end
 
 parseinstructions(file) = readcollection(file, Instruction)
 
-run(file::AbstractString) = run(Console(parseinstructions(file)))
+run(file::AbstractString) = run!(Console(parseinstructions(file)))
 
 
 function flip(instr::Instruction)
@@ -80,14 +79,15 @@ end
 
 function tryfixes(file)
     original = parseinstructions(file)
+    firstmachine = Console(original)
+    run!(firstmachine)
 
-    len = length(original)
-    for i = 1:len
+    for i = firstmachine.pastinstructions
         instr = original[i]
         if instr.code !== "acc"
             newset = copy(original)
             newset[i] = flip(instr)
-            res = run(Console(newset))
+            res = run!(Console(newset))
 
             if !res[2]
                 return res
