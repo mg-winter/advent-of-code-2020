@@ -15,6 +15,8 @@ readgrid(file, delim = nothing, type = nothing) = delim == nothing ? readchargri
     
 readcollection(file, converter = nothing) = (res = readlines(file); converter == nothing ? res : map(converter, res))
 
+readnumbers(file) = readcollection(file, curry(parse, Int, true))
+
 pushall!(coll, items) = push!(coll, items...)
 function readgroups(lines::AbstractArray, lineconverter = l -> l, groupinitializer = () -> [], groupupdater! = push!)
     

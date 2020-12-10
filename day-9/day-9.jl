@@ -62,11 +62,10 @@ function getallinvalid(numbers::AbstractVector, preamblesize)
                 addsum!(sumsbysum, sumsbyindex, numbers, newindex, lastcheck)
             end
     end
-    
+
     return res
 end
 
-readnumbers(file) = readcollection(file, curry(parse, Int, true))
 getallinvalid(file, preamblesize) = getallinvalid(readnumbers(file), preamblesize)
 
 getfirstinvalid(file, preamblesize) = getallinvalid(file, preamblesize)[1]
