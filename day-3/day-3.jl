@@ -25,7 +25,7 @@ function test_b()
 
     results =  run(counttrees, testperms)
     results_args = [[results]]
-    return [results, run(Test(prod ∘ curry_map(res -> res.actual), (TestPermutation(results_args, 336))))]
+    return [results, run(Test(prod ∘ curry_map(res -> res.actual, false), (TestPermutation(results_args, 336))))]
 end
 
 function run_b()

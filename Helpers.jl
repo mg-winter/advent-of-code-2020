@@ -4,9 +4,9 @@ using Printf
 
 curry(func::Function, first, expectone = false) = args -> expectone ? func(first, args) : func(first, args...)
 
-curry_map(mapfunc::Function, expectone = false) = curry(map, mapfunc, expectone)
+curry_map(mapfunc::Function, expectone = true) = curry(map, mapfunc, expectone)
 
-curry_filter(filterfunc::Function, expectone = false) = curry(filter, filterfunc, expectone)
+curry_filter(filterfunc::Function, expectone = true) = curry(filter, filterfunc, expectone)
 
 
 readchargrid(file) = permutedims(hcat(map(collect, readlines(file))...))

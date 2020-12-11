@@ -58,8 +58,8 @@ function run_b()
     firsts = 1:(size(sorted, 1) -  1)
 
     return firsts |> curry_map(i -> (sorted[i], sorted[i+1], sorted[i+1] - sorted[i]), true) |>
-                        curry_filter(t -> t[3] == 2, true) |>
-                        curry_map(t -> t[1] + 1,true)
+                        curry_filter(t -> t[3] == 2) |>
+                        curry_map(t -> t[1] + 1)
 
 end
 
