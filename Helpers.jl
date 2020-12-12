@@ -8,6 +8,14 @@ curry_map(mapfunc::Function, expectone = true) = curry(map, mapfunc, expectone)
 
 curry_filter(filterfunc::Function, expectone = true) = curry(filter, filterfunc, expectone)
 
+function foldfuncl(accumulator::Function, itr, init)
+    acc = init
+    for item = itr
+        acc = accumulator(acc, item)
+    end
+    return acc
+end
+
 
 readchargrid(file) = permutedims(hcat(map(collect, readlines(file))...))
 
@@ -89,3 +97,4 @@ tostring(res::TestResult, skipinput::Bool = true) = @sprintf("%s\nActual: %s\nPa
 
 tostring(reslist::AbstractVector, skipinput::Bool = true) = map(res -> tostring(res, skipinput), reslist) |> joinparas
 
+prettyprint(val) = (show(stdout, "text/plain", val); println(""))
