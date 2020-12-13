@@ -16,6 +16,13 @@ function foldfuncl(accumulator::Function, itr, init)
     return acc
 end
 
+function min(comparator::Function, itr) 
+    return length(itr) == 0 ? nothing : foldfuncl((a, b) -> comparator(a) < comparator(b) ? a : b , itr, itr[1])
+end
+
+function max(comparator::Function, itr, init) 
+    return length(itr) == 0 ? nothing : foldfuncl((a, b) -> comparator(a) > comparator(b) ? a : b , itr, itr[1])
+end
 
 readchargrid(file) = permutedims(hcat(map(collect, readlines(file))...))
 
