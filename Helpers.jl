@@ -24,6 +24,8 @@ function max(comparator::Function, itr, init)
     return length(itr) == 0 ? nothing : foldfuncl((a, b) -> comparator(a) > comparator(b) ? a : b , itr, itr[1])
 end
 
+parsebin(str) = parse(Int, str, base=2)
+
 readchargrid(file) = permutedims(hcat(map(collect, readlines(file))...))
 
 readgrid(file, delim = nothing, type = nothing) = delim == nothing ? readchargrid(file) : (params = type == nothing ? (file, delim) : (file, delim, type); readdlm(params...))
