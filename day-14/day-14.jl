@@ -33,6 +33,8 @@ struct MaskV2
 
             push!(fms, [((a, b) -> a & b, andmask), ((a, b) -> a | b, ormask)])
 
+            #future optimization: collect all "and" masks into one and all "or" masks into one
+            
              i = findnext('X', str, i+1)
         end
 
